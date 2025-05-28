@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 
 import { validation } from '../../shared/middleware';
+import { CitiesProvider } from '../../database/providers/cities';
 
 interface IParamProps {
   id?: number;
@@ -15,13 +16,28 @@ export const deleteByIdValidation = validation(getSchema => ({
   ),
 }));
 
-export const deleteById = async (req: Request<IParamProps>, res: Response) => {
-  console.log(req.params);
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-    errors: {
-      default: 'Not implemented',
-    },
-  });
+export const deleteById = async (
+  req: Request<IParamProps>,
+  res: Response,
+): Promise<void> => {
+  if (!req.params.id) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      errors: {
+        default: 'The field id not was found',
+      },
+    });
+    return;
+  }
+  const result = await CitiesProvider.deleteById(req.params.id);
+  if (result instanceof Error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      errors: {
+        default: result.message,
+      },
+    });
+    return;
+  }
 
+  res.status(StatusCodes.NO_CONTENT).send();
   return;
 };

@@ -2,7 +2,7 @@ import { knex } from 'knex';
 import { development, production, test } from './Environment';
 
 const getEnvironment = () => {
-  console.log(process.env.NODE_ENV);
+  console.log('Node env = ',process.env.NODE_ENV);
   switch (process.env.NODE_ENV) {
     case 'production':
       return production;

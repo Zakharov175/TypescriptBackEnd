@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
-import { validation } from '../../shared/middleware/Validation';
 import { StatusCodes } from 'http-status-codes';
+import { Request, Response } from 'express';
 import * as yup from 'yup';
+import { validation } from '../../shared/middleware/Validation';
+import { CitiesProvider } from '../../database/providers/cities';
 
 interface IParamProps {
   id?: number;
@@ -15,10 +16,29 @@ export const getByIdValidation = validation(getSchema => ({
   ),
 }));
 
-export const getById = async (req: Request<IParamProps>, res: Response) => {
-  console.log(req.params);
-  res
-    .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .send('Not implement yet get By id');
+export const getById = async (
+  req: Request<IParamProps>,
+  res: Response,
+): Promise<void> => {
+  if (!req.params.id) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      errors: {
+        default: 'The field id not was found',
+      },
+    });
+    return;
+  }
+  const result = await CitiesProvider.getById(req.params.id);
+  if (result instanceof Error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      errors: {
+        default: result.message,
+      },
+    });
+    return;
+  }
+  res.status(StatusCodes.OK).json({
+    result,
+  });
   return;
 };
