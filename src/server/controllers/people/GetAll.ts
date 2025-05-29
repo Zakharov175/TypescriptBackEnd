@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import { validation } from '../../shared/middleware/Validation';
-import { CitiesProvider } from '../../database/providers/cities';
+import { PeopleProvider } from '../../database/providers/people';
 import { UtilsValidation } from '../../shared/utils';
 
 interface IQueryProps {
@@ -30,15 +30,14 @@ export const getAll = async (
   req: Request<{}, {}, {}, IQueryProps>,
   res: Response,
 ): Promise<void> => {
-  const statusCode = StatusCodes.OK;
-  const result = await CitiesProvider.getAll(
+  const result = await PeopleProvider.getAll(
     req.query.page || 1,
     req.query.limit || 5,
     req.query.filter || '',
     Number(req.query.id),
   );
-
-  const count = await CitiesProvider.count(req.query.filter || '');
+  const statusCode = StatusCodes.OK;
+  const count = await PeopleProvider.count(req.query.filter || '');
   if (!UtilsValidation.handleControllerResult(result, res, statusCode, count)) {
     res.end();
   }

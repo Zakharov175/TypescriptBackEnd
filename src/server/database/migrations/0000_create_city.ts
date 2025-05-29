@@ -1,20 +1,20 @@
 import type { Knex } from 'knex';
-import { ETableName } from '../ETableNames';
+import { ETableNames } from '../ETableNames';
 
 export const up = async (knex: Knex) => {
   return knex.schema
-    .createTable(ETableName.city, table => {
-      table.bigIncrements('id').primary().index();
+    .createTable(ETableNames.city, table => {
+      table.bigIncrements('id').primary();
       table.string('name', 150).checkLength('<=',150).index().notNullable();
       table.comment('Table used for store system cities');
     })
     .then(() => {
-      console.log(`Create table ${ETableName.city}`);
+      console.log(`Create table ${ETableNames.city}`);
     });
 };
 
 export const down = async (knex: Knex) => {
-  return knex.schema.dropTable(ETableName.city).then(() => {
-    console.log(`Dropped table ${ETableName.city}`);
+  return knex.schema.dropTable(ETableNames.city).then(() => {
+    console.log(`Dropped table ${ETableNames.city}`);
   });
 };

@@ -1,13 +1,13 @@
-import knex, { Knex } from 'knex';
-import { ETableName } from '../ETableNames';
+import { Knex } from 'knex';
+import { ETableNames } from '../ETableNames';
 
-export const seed = async (Knex: Knex) => {
-  const [{ count }] = await knex(ETableName.city).count<[{ count: number }]>(
+export const seed = async (knex: Knex) => {
+  const [{ count }] = await knex(ETableNames.city).count<[{ count: number }]>(
     '* as count',
   );
   if (!Number.isInteger(count) || Number(count) > 0) return;
   const citiesToInsert = citiesList.map(cityName => ({ name: cityName }));
-  await knex(ETableName.city).insert(citiesToInsert);
+  await knex(ETableNames.city).insert(citiesToInsert);
 };
 
 const citiesList = [

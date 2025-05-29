@@ -3,10 +3,8 @@ import { Request, Response } from 'express';
 import * as yup from 'yup';
 import { validation } from '../../shared/middleware/Validation';
 import { CitiesProvider } from '../../database/providers/cities';
-
-interface IParamProps {
-  id?: number;
-}
+import { UtilsValidation } from '../../shared/utils';
+import { IParamProps } from '../../database/models';
 
 export const getByIdValidation = validation(getSchema => ({
   params: getSchema<IParamProps>(
@@ -20,25 +18,11 @@ export const getById = async (
   req: Request<IParamProps>,
   res: Response,
 ): Promise<void> => {
-  if (!req.params.id) {
-    res.status(StatusCodes.BAD_REQUEST).json({
-      errors: {
-        default: 'The field id not was found',
-      },
-    });
-    return;
+  const { id } = req.params;
+  const statusCode = StatusCodes.OK;
+  if (!UtilsValidation.validateParamId(id, res)) return;
+  const result = await CitiesProvider.getById(id);
+  if (!UtilsValidation.handleControllerResult(result, res, statusCode)) {
+    res.end();
   }
-  const result = await CitiesProvider.getById(req.params.id);
-  if (result instanceof Error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      errors: {
-        default: result.message,
-      },
-    });
-    return;
-  }
-  res.status(StatusCodes.OK).json({
-    result,
-  });
-  return;
 };

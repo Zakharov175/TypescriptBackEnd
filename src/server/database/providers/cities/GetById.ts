@@ -1,10 +1,10 @@
 import { Knex } from '../../knex';
-import { ETableName } from '../../ETableNames';
+import { ETableNames } from '../../ETableNames';
 import { ICity } from '../../models';
 
 export const getById = async (id: number): Promise<ICity | Error> => {
   try {
-    const result = await Knex(ETableName.city)
+    const result = await Knex<ICity>(ETableNames.city)
       .select('*')
       .where('id', '=', id)
       .first();
@@ -12,6 +12,6 @@ export const getById = async (id: number): Promise<ICity | Error> => {
     return new Error('Error when trying get city by id');
   } catch (error) {
     console.error(error);
-    return new Error('Error in get city by id')
+    return new Error('Error in get city by id');
   }
 };
