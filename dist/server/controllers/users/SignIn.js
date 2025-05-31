@@ -47,8 +47,8 @@ exports.signInValidation = (0, middleware_1.validation)(get => ({
 }));
 const signIn = async (req, res) => {
     const { email, password } = req.body;
-    const result = await users_1.UserProviders.getByEmail(email);
-    if (result instanceof Error) {
+    const user = await users_1.UserProviders.getByEmail(email);
+    if (user instanceof Error) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             errors: {
                 default: 'Email or password wrong ',
@@ -56,7 +56,7 @@ const signIn = async (req, res) => {
         });
         return;
     }
-    const passwordMatch = await services_1.PasswordCrypto.verifyPassword(password, result.password);
+    const passwordMatch = await services_1.PasswordCrypto.verifyPassword(password, user.password);
     if (!passwordMatch) {
         res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json({
             errors: {
@@ -65,7 +65,15 @@ const signIn = async (req, res) => {
         });
     }
     else {
-        res.status(http_status_codes_1.StatusCodes.OK).json({ accessToken: 'test.test.test' });
+        const accessToken = services_1.JWTService.sign({ uid: user.id });
+        if (accessToken === 'JWT_SECRET_NOT_FOUND') {
+            res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json({
+                errors: {
+                    default: 'Error generation accesses token',
+                },
+            });
+        }
+        res.status(http_status_codes_1.StatusCodes.OK).json({ accessToken });
         return;
     }
 };
