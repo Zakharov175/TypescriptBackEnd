@@ -9,7 +9,7 @@ export const getById = async (id: number): Promise<ICity | Error> => {
       .where('id', '=', id)
       .first();
     if (result) return result;
-    return new Error('Error when trying get city by id');
+    return new Error('Id was not found');
   } catch (error) {
     console.error(error);
     return new Error('Error in get city by id');

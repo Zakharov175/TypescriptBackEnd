@@ -1,11 +1,12 @@
 import { server } from './server/Server';
-//to up server : ts-node-dev src/index.ts
+import 'dotenv/config';
 import { Knex } from './server/database/knex/';
+//to up server : ts-node-dev src/index.ts
 
-const PORT = 3000;
+
 const startServer = () => {
   server.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${process.env.PORT }`);
   });
 };
 
@@ -22,3 +23,7 @@ if (process.env.IS_LOCALHOST !== 'true') {
 } else {
   startServer();
 }
+
+//yarn run knex:rollback-all (remove all dadas)
+// yarn run knex:migrate (start migrate)
+//yarn run knex:seed

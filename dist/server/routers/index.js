@@ -1,0 +1,23 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+const express_1 = require("express");
+const controllers_1 = require("./../controllers");
+const middleware_1 = require("../shared/middleware");
+const router = (0, express_1.Router)();
+exports.router = router;
+router.get('/', (_, res) => {
+    res.send('Hello Word');
+});
+router.post('/cities', middleware_1.ensureAuthenticated, controllers_1.CitiesController.createValidation, controllers_1.CitiesController.create);
+router.get('/cities', middleware_1.ensureAuthenticated, controllers_1.CitiesController.getAllValidation, controllers_1.CitiesController.getAll);
+router.get('/cities/:id', middleware_1.ensureAuthenticated, controllers_1.CitiesController.getByIdValidation, controllers_1.CitiesController.getById);
+router.delete('/cities/:id', middleware_1.ensureAuthenticated, controllers_1.CitiesController.deleteByIdValidation, controllers_1.CitiesController.deleteById);
+router.put('/cities/:id', middleware_1.ensureAuthenticated, controllers_1.CitiesController.updateByIdValidation, controllers_1.CitiesController.updateById);
+router.post('/people', middleware_1.ensureAuthenticated, controllers_1.PeopleController.createValidation, controllers_1.PeopleController.create);
+router.get('/people', middleware_1.ensureAuthenticated, controllers_1.PeopleController.getAllValidation, controllers_1.PeopleController.getAll);
+router.get('/people/:id', middleware_1.ensureAuthenticated, controllers_1.PeopleController.getByIdValidation, controllers_1.PeopleController.getById);
+router.delete('/people/:id', middleware_1.ensureAuthenticated, controllers_1.PeopleController.deleteByIdValidation, controllers_1.PeopleController.deleteById);
+router.put('/people/:id', middleware_1.ensureAuthenticated, controllers_1.PeopleController.updateByIdValidation, controllers_1.PeopleController.updateById);
+router.post('/login', controllers_1.UsersControllers.signInValidation, controllers_1.UsersControllers.signIn);
+router.post('/register', controllers_1.UsersControllers.signUpValidation, controllers_1.UsersControllers.signUp);

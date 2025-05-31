@@ -9,7 +9,7 @@ export const getById = async (id: number): Promise<IPerson | Error> => {
       .where('id', '=', id)
       .first();
     if (result) return result;
-    return new Error('Error when trying get person by id');
+    return new Error('Id was not found');
   } catch (error) {
     console.error(error);
     return new Error('Error in get person by id');

@@ -17,11 +17,7 @@ export const createValidation = validation(getSchema => ({
         .min(3)
         .max(150)
         .matches(/^[^0-9]*$/, 'The name not be contain number.'),
-      email: yup
-        .string()
-        .required()
-        .email()
-        .matches(/^[^0-9]*$/, 'The name not be contain number.'),
+      email: yup.string().required().email(),
       cityId: yup.number().integer().required().min(1),
     }),
   ),
